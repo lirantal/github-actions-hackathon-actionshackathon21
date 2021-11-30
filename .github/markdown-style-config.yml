@@ -1,0 +1,13 @@
+# Default state for all rules
+default: true
+
+# MD033/no-inline-html - Inline HTML
+MD033:
+  # Allowed elements
+  allowed_elements: ['p', 'br', 'h1', 'h2', 'h3', 'h4', 'a', 'img']
+  
+# Don't fail on line length limit of 80 chars
+MD013: false
+
+# Don't fail on first line of the file not being a markdown heading (maintainers like beautiful READMEs)
+MD041: false
