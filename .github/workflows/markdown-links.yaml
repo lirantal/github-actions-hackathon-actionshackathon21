@@ -1,0 +1,14 @@
+on:
+  push:
+
+name: "Markdown: broken links"
+jobs:
+  markdown-link-check:
+    name: "Markdown: broken links"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout project"
+        uses: actions/checkout@v2
+
+      - name: "Markdown: broken links"
+        uses: ruzickap/action-my-markdown-link-checker@v1
