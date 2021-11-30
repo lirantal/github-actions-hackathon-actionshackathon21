@@ -1,0 +1,24 @@
+on:
+  push:
+
+name: "Markdown: style"
+jobs:
+  markdown_lint:
+    name: "Markdown: style"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Markdown: style"
+        uses: ruzickap/action-my-markdown-linter@v1
+        with:
+          config_file: .github/markdown-style-config.yml
+          #debug: true
+          search_paths: |
+            ./
+            docs/
+          exclude: |
+            node_modules/
+            coverage/
+            dist/
+            tests/
+            CHANGELOG.md
