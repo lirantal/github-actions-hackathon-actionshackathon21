@@ -1,3 +1,4 @@
+name: "PR title update with base branch"
 on: [pull_request]
 
 jobs:
