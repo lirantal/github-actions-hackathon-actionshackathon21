@@ -1,0 +1,15 @@
+name: "Deps: show dependencies metadata"
+on:
+  - pull_request
+
+jobs:
+  deps_check_new_dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repo for a local instance"
+        uses: actions/checkout@v2
+        
+      - name: "Deps: show dependencies metadata"
+        uses: lirantal/github-action-new-dependencies-alerts@v1.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
