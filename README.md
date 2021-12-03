@@ -3,6 +3,13 @@
 This repository demonstrates the workflows recipe for the GitHub Actions Hackathon with Dev.to 2021
 
 
+---
+title: The maintainer's CI workflows recipe for a peaceful open source life
+published: true
+description: My submission to the GitHub Actions x DEV Hackathon 2021!
+tags: actionshackathon21, github, opensource
+---
+
 ### My Workflow
 
 My GitHub Actions hackathon application entry is about all the small things that would contribute to a better maintainer life.
@@ -28,13 +35,20 @@ This recipe will introduce the following workflows:
 
 #### Pull Request engagement
 
-- **PR Title update** - Do you manage multiple base branches with PRs to? If you manually updated your PR titles to include this information then now this is automated for you
+- **Pull Request title update** - Do you manage multiple base branches with PRs to? If you manually updated your PR titles to include this information then now this is automated for you
 
-- **PR Contribution fun note** - Welcome contributors to your project by adding a comment that thanks them and embeds an image of a cute animal
+- **Pull Request contribution fun note** - Welcome contributors to your project by adding a comment that thanks them and embeds an image of a cute animal
 
 ### Submission Category: 
 
 - Maintainer Must-Haves
+
+### Repository
+
+The following repository demonstrates the workflow this application suggests:
+
+{% github https://github.com/lirantal/github-actions-hackathon-actionshackathon21 %}
+
 
 ### Additional Resources / Info
 
@@ -45,3 +59,154 @@ The recipe makes use of the following GitHub Actions from the marketplace:
 - [ruzickap/action-my-markdown-link-checker](https://github.com/marketplace/actions/my-markdown-link-checker)
 - [circa10a/animal-action](https://github.com/marketplace/actions/animal-action)
 - [lirantal/github-action-pr-title-update-branch](https://github.com/marketplace/actions/pull-request-title-update-to-include-base-branch)
+
+## Demo
+
+Let's put all of it together and see how they add to an overall better experience for both maintainers and contributors alike.
+
+### Pull Request title update
+
+![PR title update with base branch](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g8j6tk3d8efhqd5xcxoc.png)
+
+As you can see, a few minutes after creating the pull request, the action kicks in and updates the title so that it includes a base branch prefix (the text `[main]`).
+
+To make that magic happen, we create a brand new GitHub Action workflow file and add this:
+
+
+```yaml
+name: "PR title update with base branch"
+on: [pull_request]
+
+jobs:
+  pr_title_update:
+    runs-on: ubuntu-latest
+    name: "PR title update with base branch"
+    steps:
+      - name: "PR title update with base branch"
+        uses: lirantal/github-action-pr-title-update-branch@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+ 
+
+### Pull Request contribution fun note
+
+![Pull Request contribution fun note](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/a6k92dcbak1ts6g4bn12.png)
+
+Ain't it cute to get that nice little note? I think so too ;-)
+
+To make that magic happen, we create a brand new GitHub Action workflow file and add this:
+
+
+```yaml
+```
+ 
+
+### New dependency advisor
+
+I can't stress enough how important is making sure you are using healthy dependencies, and those without security vulnerabilities. How can you tell if a new one someone adds to your project is a liability or a gift? 
+
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/zd8nqp52v4ubryjua42w.png)
+ 
+Luckily, we have the Snyk Advisor, and this handy GitHub Action helping us vet it:
+
+```yaml
+name: "Deps: show dependencies metadata"
+on:
+  - pull_request
+
+jobs:
+  deps_check_new_dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repo for a local instance"
+        uses: actions/checkout@v2
+        
+      - name: "Deps: show dependencies metadata"
+        uses: lirantal/github-action-new-dependencies-alerts@v1.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
+### Markdown Style linter
+
+If a markdown file doesn't confirm to proper style conventions then we can find out about it in the Pull Request CI phase rather than after we see it "in production", or in other words, showing up to the whole world as the face of the repository:
+
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p50ksjc8aa2oa5wnzjh5.png) 
+
+To make that magic happen, we create a brand new GitHub Action workflow file and add this:
+
+```yaml
+on:
+  push:
+
+name: "Markdown: style"
+jobs:
+  markdown_lint:
+    name: "Markdown: style"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Markdown: style"
+        uses: ruzickap/action-my-markdown-linter@v1
+        with:
+          config_file: .github/markdown-style-config.yml
+          #debug: true
+          search_paths: |
+            ./
+            docs/
+          exclude: |
+            node_modules/
+            coverage/
+            dist/
+            tests/
+            CHANGELOG.md
+```
+
+And make sure that you have the accompanying configuration file for it as such:
+
+```yml
+# Default state for all rules
+default: true
+
+# MD033/no-inline-html - Inline HTML
+MD033:
+  # Allowed elements
+  allowed_elements: ['p', 'br', 'h1', 'h2', 'h3', 'h4', 'a', 'img']
+  
+# Don't fail on line length limit of 80 chars
+MD013: false
+
+# Don't fail on first line of the file not being a markdown heading (maintainers like beautiful READMEs)
+MD041: false
+```
+
+### Markdown Links linter
+
+Want to avoid broken links in your README? Me too
+
+That's why I can now find out about it when it happens in the CI process when I push a change via a pull request rather than after the fact:
+
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/5ohpwmtaceomwoxv153u.png)
+ 
+To make that magic happen, we create a brand new GitHub Action workflow file and add this:
+
+```yaml
+on:
+  push:
+
+name: "Markdown: broken links"
+jobs:
+  markdown-link-check:
+    name: "Markdown: broken links"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout project"
+        uses: actions/checkout@v2
+
+      - name: "Markdown: broken links"
+        uses: ruzickap/action-my-markdown-link-checker@v1
+```
+
+That's it, have fun!
